@@ -1,6 +1,8 @@
 package ru.netology;
 
 import com.codeborne.selenide.Configuration;
+import data.DataGenerator;
+import entities.UserRegistration;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.text;
@@ -56,9 +58,19 @@ public class UserRegistrationTest {
     void signInWithoutPassword() {
         UserRegistration user = DataGenerator.generateValidActive();
         open("http://localhost:9999");
-        Configuration.holdBrowserOpen = true;
         $("[data-test-id=login] input").setValue(user.getLogin());
         $("button[data-test-id=action-login]").click();
         $("[data-test-id=password]").shouldHave(text("Поле обязательно для заполнения"));
+    }
+
+    @Test
+    void signInUnregisteredUser() {
+        UserRegistration user = DataGenerator.generateUnregisteredUser();
+        open("http://localhost:9999");
+        $("[data-test-id=login] input").setValue(user.getLogin());
+        $("[data-test-id=password] input").setValue(user.getPassword());
+        $("button[data-test-id=action-login]").click();
+        $("[data-test-id=error-notification]").shouldHave(text("Ошибка!"))
+                .shouldHave(text("Неверно указан логин или пароль"));
     }
 }

@@ -1,4 +1,4 @@
-package ru.netology;
+package data;
 
 import com.github.javafaker.Faker;
 import com.google.gson.Gson;
@@ -6,6 +6,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import entities.UserRegistration;
 
 import java.util.Locale;
 
@@ -68,6 +69,15 @@ private DataGenerator() {
         registrationUsers(userReg);
         return new UserRegistration(login,
                 faker.internet().password(true), activeStatus);
+    }
+
+    public static UserRegistration generateUnregisteredUser() {
+        String password = faker.internet().password(true);
+        UserRegistration userNoReg = new UserRegistration(faker.name().username(),
+                password, activeStatus);
+        registrationUsers(userNoReg);
+        return new UserRegistration(faker.name().username(),
+                password, activeStatus);
     }
 
 }
